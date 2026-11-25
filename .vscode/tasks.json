@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build kitchen server",
+      "type": "shell",
+      "command": "gcc",
+      "args": [
+        "-Wall", "-Wextra", "-g", "-Iinclude",
+        "src/main.c", "src/server.c", "src/api.c", "src/orders.c",
+        "src/queue.c", "src/menu.c", "src/storage.c", "src/strbuf.c",
+        "-o", "kitchen"
+      ],
+      "windows": {
+        "args": [
+          "-Wall", "-Wextra", "-g", "-Iinclude",
+          "src/main.c", "src/server.c", "src/api.c", "src/orders.c",
+          "src/queue.c", "src/menu.c", "src/storage.c", "src/strbuf.c",
+          "-o", "kitchen", "-lws2_32"
+        ]
+      },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "run kitchen server",
+      "type": "shell",
+      "command": "./kitchen",
+      "windows": { "command": ".\\kitchen.exe" },
+      "dependsOn": "build kitchen server",
+      "problemMatcher": []
+    }
+  ]
+}

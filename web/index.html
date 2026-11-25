@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitchen Queue · Order Control</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">🍳</div>
+    <div>
+      <h1>Kitchen Queue</h1>
+      <span>Restaurant order control</span>
+    </div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-view="board">Orders Board</button>
+    <button class="tab" data-view="menu">Menu</button>
+    <button class="tab" data-view="report">Daily Report</button>
+  </nav>
+
+  <div class="actions">
+    <span class="conn" id="conn" title="Server connection"><i></i><b>Live</b></span>
+    <button class="btn soft" id="btnStart" title="Shortcut: S">▶ Start Next</button>
+    <button class="btn primary" id="btnNew" title="Shortcut: N">＋ New Order</button>
+    <button class="btn ghost" id="btnExit" title="Save and stop the server">⏻ Exit</button>
+  </div>
+</header>
+
+<main>
+  <!-- ============ ORDERS BOARD ============ -->
+  <section class="view active" id="view-board">
+    <div class="chips" id="chips"></div>
+
+    <div class="board">
+      <div class="col" data-col="pending">
+        <div class="col-head">
+          <span class="dot amber"></span><h2>Pending Queue</h2><em id="n-pending">0</em>
+          <button class="mini" id="btnStart2">▶ Start next</button>
+        </div>
+        <div class="col-body" id="col-pending"></div>
+      </div>
+      <div class="col" data-col="cooking">
+        <div class="col-head"><span class="dot red"></span><h2>Cooking</h2><em id="n-cooking">0</em></div>
+        <div class="col-body" id="col-cooking"></div>
+      </div>
+      <div class="col" data-col="ready">
+        <div class="col-head"><span class="dot green"></span><h2>Ready to Serve</h2><em id="n-ready">0</em></div>
+        <div class="col-body" id="col-ready"></div>
+      </div>
+      <div class="col" data-col="done">
+        <div class="col-head"><span class="dot blue"></span><h2>Recent History</h2><em id="n-done">0</em></div>
+        <div class="col-body" id="col-done"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MENU ============ -->
+  <section class="view" id="view-menu">
+    <div class="page-head">
+      <div><h2>Menu</h2><p>Items guests can order. Prep time decides how long the kitchen needs.</p></div>
+    </div>
+    <div class="menu-layout">
+      <div class="menu-grid" id="menuGrid"></div>
+      <form class="panel add-form" id="addForm" autocomplete="off">
+        <h3>Add menu item</h3>
+        <label>Name<input id="m-name" maxlength="31" placeholder="e.g. Paneer Wrap" required></label>
+        <div class="two">
+          <label>Price<input id="m-price" type="number" min="1" step="0.5" placeholder="149" required></label>
+          <label>Prep (min)<input id="m-prep" type="number" min="1" max="120" placeholder="8" required></label>
+        </div>
+        <button class="btn primary wide" type="submit">Add to menu</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section class="view" id="view-report">
+    <div class="page-head"><div><h2>Daily Report</h2><p>Live summary of everything the kitchen has handled.</p></div></div>
+    <div class="stat-grid" id="statGrid"></div>
+    <div class="report-cols">
+      <div class="panel">
+        <h3>Best sellers</h3>
+        <div id="bars" class="bars"></div>
+      </div>
+      <div class="panel">
+        <h3>Order history</h3>
+        <div class="table-wrap"><table id="histTable"></table></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ NEW ORDER DIALOG ============ -->
+<dialog id="dlgOrder">
+  <div class="dlg-head">
+    <h2>New Order</h2>
+    <button class="x" data-close>✕</button>
+  </div>
+  <div class="order-layout">
+    <div class="pick">
+      <h3>Choose items</h3>
+      <div class="pick-grid" id="pickGrid"></div>
+    </div>
+    <aside class="summary">
+      <h3>Order details</h3>
+      <label class="lbl">Table number</label>
+      <div class="stepper big">
+        <button type="button" id="tblMinus">−</button>
+        <input id="tblNum" type="number" min="1" max="50" value="1">
+        <button type="button" id="tblPlus">＋</button>
+      </div>
+
+      <label class="lbl">Priority</label>
+      <div class="seg" id="priSeg">
+        <button type="button" class="on" data-vip="0">Normal</button>
+        <button type="button" data-vip="1">★ VIP</button>
+      </div>
+
+      <label class="lbl">Summary</label>
+      <ul class="cart" id="cartList"></ul>
+      <div class="totals">
+        <div><span>Estimated prep</span><b id="cartPrep">–</b></div>
+        <div class="grand"><span>Total</span><b id="cartTotal">₹0</b></div>
+      </div>
+      <button class="btn primary wide" id="btnPlace" disabled>Place order</button>
+    </aside>
+  </div>
+</dialog>
+
+<!-- ============ CONFIRM EXIT ============ -->
+<dialog id="dlgExit" class="small">
+  <div class="dlg-body">
+    <div class="big-emoji">⏻</div>
+    <h2>Exit the system?</h2>
+    <p>All orders are saved automatically. The server will stop and this page will go offline.</p>
+    <div class="row">
+      <button class="btn ghost" data-close>Keep working</button>
+      <button class="btn danger" id="btnExitYes">Save &amp; exit</button>
+    </div>
+  </div>
+</dialog>
+
+<div id="toasts"></div>
+<script src="/app.js"></script>
+</body>
+</html>

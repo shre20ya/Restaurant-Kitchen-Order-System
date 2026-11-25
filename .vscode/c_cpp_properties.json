@@ -1,0 +1,10 @@
+git config --global user.name "Shreya Kumari"{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "Kitchen",
+      "includePath": ["${workspaceFolder}/include"],
+      "cStandard": "c11"
+    }
+  ]
+}

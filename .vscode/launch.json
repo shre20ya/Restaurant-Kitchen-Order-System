@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Kitchen Server (gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/kitchen",
+      "windows": { "program": "${workspaceFolder}/kitchen.exe" },
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "preLaunchTask": "build kitchen server"
+    }
+  ]
+}
